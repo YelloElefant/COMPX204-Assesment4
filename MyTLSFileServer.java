@@ -1,26 +1,59 @@
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
+import java.security.*;
 import java.util.*;
 
 public class MyTLSFileServer {
+
+    // use java key store and load the keystore file server.jks
+
+    private static SSLServerSocketFactory getSSF() {
+        try {
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            KeyStore ks = KeyStore.getInstance("JKS");
+
+            // password for the keystore file using console password
+            System.out.print("Enter password for the keystore: ");
+
+            // password for the keystore file
+            char[] passphrase = System.console().readPassword();
+
+            ks.load(new FileInputStream("server.jks"), passphrase);
+            kmf.init(ks, passphrase);
+            ctx.init(kmf.getKeyManagers(), null, null);
+
+            SSLServerSocketFactory ssf = ctx.getServerSocketFactory();
+
+            return ssf;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void main(String[] args) {
         int port = 9999;
+
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
+
         try {
-            SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory
-                    .getDefault();
+            SSLServerSocketFactory sslServerSocketFactory = getSSF();
             SSLServerSocket sslServerSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
+            String[] enabledProtocols = { "TLSv1.2", "TLSv1.3" };
+
+            sslServerSocket.setEnabledProtocols(enabledProtocols);
             System.out.println("Server started at port " + port);
+
             while (true) {
                 SSLSocket sslSocket = (SSLSocket) sslServerSocket.accept();
                 System.out.println("Client connected");
                 new Thread(new ClientHandler(sslSocket)).start();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

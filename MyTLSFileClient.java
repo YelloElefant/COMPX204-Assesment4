@@ -55,6 +55,24 @@ public class MyTLSFileClient {
                 e.printStackTrace();
             }
 
+            // get the X509Certificate for this session and print it
+            System.out.println("Certificate: " + cert.toString());
+
+            // get response from server and write to file if file found
+            String response = reader.readLine();
+            if (response.equals("File found")) {
+                File file = new File("_" + fileName);
+                PrintWriter fileWriter = new PrintWriter(new FileWriter(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fileWriter.println(line);
+                }
+                fileWriter.close();
+                System.out.println("File received");
+            } else {
+                System.out.println("File not found");
+            }
+
             sslSocket.close();
 
         } catch (IOException e) {

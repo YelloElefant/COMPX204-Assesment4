@@ -1,8 +1,6 @@
 import javax.net.ssl.*;
 import java.io.*;
-import java.net.*;
 import java.security.*;
-import java.util.*;
 
 public class MyTLSFileServer {
 

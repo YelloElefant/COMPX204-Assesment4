@@ -3,13 +3,7 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.net.ssl.*;
 import java.io.*;
-import java.net.*;
-import java.security.*;
 import java.security.cert.*;
-import java.util.*;
-
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
 
 public class MyTLSFileClient {
     static String host = "localhost";
@@ -31,7 +25,6 @@ public class MyTLSFileClient {
             SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(host, port);
             BufferedReader reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream()));
             PrintWriter writer = new PrintWriter(sslSocket.getOutputStream(), true);
-            BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
             // set up HTTPS-style checking of HostName _before_
             // the handshake

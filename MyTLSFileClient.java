@@ -16,11 +16,13 @@ public class MyTLSFileClient {
     static int port = 0;
 
     public static void main(String[] args) {
-        if (args.length > 0) {
+        if (args.length > 0 && args.length < 4) {
             host = args[0];
             port = Integer.parseInt(args[1]);
+            System.out.println("Host: " + host);
+            System.out.println("Port: " + port);
         } else {
-            System.out.println("Usage: java MyTLSFileClient <host> <port>");
+            System.out.println("Usage: java MyTLSFileClient <host> <port> <filename>");
             System.exit(1);
         }
 

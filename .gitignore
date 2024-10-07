@@ -5,3 +5,4 @@
 !.gitignore
 FileDiffernce.java
 !client.bat
+!mkKeyCert.sh
